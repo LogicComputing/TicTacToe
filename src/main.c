@@ -7,16 +7,26 @@
 
 int checkGameOver(int board[3][3]) {
 
-    int gameWinner = NO_PLAYER;
     int i;
 
     // Check horizontal wins
+    for (i = 0; i < 3; i++)
+        if ( (board[i][0] == board[i][1]) && (board[i][1] == board[i][2]) && (board[i][0] != NO_PLAYER) )
+            return board[i][0];
 
     // Check vertical wins
+    for (i = 0; i < 3; i++)
+        if ( (board[0][i] == board[1][i]) && (board[1][i] == board[2][i]) && (board[0][i] != NO_PLAYER) )
+            return board[0][i];
 
     // Check diagonal wins
+    if ( (board[0][0] == board[1][1]) && (board[1][1] == board[2][2]) && (board[0][0] != NO_PLAYER) )
+        return board[0][0];
+    if ( (board[2][0] == board[1][1]) && (board[1][1] == board[0][2]) && (board[2][0] != NO_PLAYER) )
+        return board[2][0];
 
-    return gameWinner;
+    // If we found no winners : we return NO_PLAYER
+    return NO_PLAYER;
 }
 
 void printGame(int board[3][3]) {
@@ -37,24 +47,63 @@ void printGame(int board[3][3]) {
         }
         printf("\n");
     }
+
+}
+
+char convertPlayerToChar (int winner) {
+
+    if (winner == PLAYER_CROSS) {
+        return 'X';
+    }
+    else {
+        return 'O';
+    }
+
 }
 
 int main() {
     int board[3][3];
     int i, j;
+    int playerTurn = PLAYER_CROSS;
+    int x_pos = 0;
+    int y_pos = 0;
 
     // Let's init the board first
     for (i = 0; i < 3; i++)
         for (j = 0; j < 3; j++)
             board[i][j] = NO_PLAYER;
 
-    /*
-    board[0][0] = PLAYER_CROSS;
-    board[0][1] = PLAYER_CROSS;
-    board[0][2] = PLAYER_CROSS;
-    */
-
+    // Display the board
     printGame(board);
+
+    while(checkGameOver(board) == NO_PLAYER) {
+
+        // Get input
+        printf("Enter X position: ");
+        scanf("%d", &x_pos);
+
+        printf("\n");
+
+        printf("Enter Y position : ");
+        scanf("%d", &y_pos);
+
+        board[y_pos][x_pos] = playerTurn;
+
+        if (playerTurn == PLAYER_CROSS) {
+            playerTurn = PLAYER_ROUND;
+        }
+        else {
+            playerTurn = PLAYER_CROSS;
+        }
+
+        // Display the board
+        printGame(board);
+
+    }
+
+    char winner = convertPlayerToChar(checkGameOver(board));
+
+    printf("\nThe winner is : %c !\n", winner);
 
     return 0;
 }
