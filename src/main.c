@@ -1,3 +1,38 @@
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
+
+int main(int argc, char* argv[]) {
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("SDL initialization failed: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    // Create a window
+    SDL_Window* window = SDL_CreateWindow("Simple SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+    if (!window) {
+        printf("Window creation failed: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    // Event loop
+    int running = 1;
+    while (running) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = 0;
+            }
+        }
+    }
+
+    // Clean up and quit
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+}
+
+/*
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -107,3 +142,5 @@ int main() {
 
     return 0;
 }
+
+*/
